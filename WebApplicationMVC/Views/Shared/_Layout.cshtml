@@ -1,0 +1,70 @@
+﻿@using WebApplicationMVC.Views.Helpers
+@using WebApplicationMVC.Models
+@using SmartHome
+@model DeviceDataView
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/deviceScript.js"></script>
+</head>
+<body>
+    <div class="container header">
+        <header>
+            <div class="row">
+                <img class="col-xs-3 img-responsive vcenter" id="imageHeader" src="/Content/SmaryHomeLogo.png" />
+                <!--
+                --------------->
+                <h1 class="col-xs-8 vcenter" id="head-list">Smart System Home Controls</h1>
+            </div>
+        </header>
+    </div>
+    <main class="container ">
+        <div class="">
+            <menu class="row ">
+
+                @{
+                    string cssClassSizeImageButton = " img-responsive ";
+
+                }
+                @Html.ActionLinkImage("create", Url.Content("~/Content/createDevice.png"), "/Main/CreateDevice", "col-xs-1 devicePadding text-center deviceBorder buttonCreate", cssClassSizeImageButton, "Создать новое устройство", "Создать устройство")
+
+                @for (int i = 0; i < Model.DeviceList.Count; i++)
+                {
+                    IDevicable device = Model.DeviceList[i];
+                    string cssClassDevice;
+                    cssClassDevice = "col-xs-1 devicePadding deviceBorder deviceOn";
+                    if (device.State == false)
+                    {
+                        cssClassDevice = "col-xs-1 devicePadding deviceBorder deviceOff";
+                    }
+                    string imageIconDevice = Model.LinkIconDevice(device);
+                    string urlIconDevice = Url.Content(imageIconDevice);
+
+                    @Html.ActionLinkImage("device" + device.Name, urlIconDevice, "/Main/ActiveDevice/" + device.Name, cssClassDevice, cssClassSizeImageButton, device.Name, device.Name);
+                }
+
+
+            </menu>
+        </div>
+        @RenderBody()
+        <div id="result">
+
+        </div>
+
+    </main>
+    <footer class="container footer">
+        <div class="text-center myContact">
+            <address class="footer-address">
+                <a href="">ejen2008@mail.ru</a>
+            </address>
+            <p class="footer-address">&copy;Войтов Е.П., 2017 г.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
