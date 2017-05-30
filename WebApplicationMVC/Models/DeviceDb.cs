@@ -5,7 +5,7 @@ using SmartHome;
 
 namespace WebApplicationMVC.Models
 {
-    public abstract class DeviceDb
+    public class DeviceDb
     {
         public int Id { get; set; }
         public string Name { get; set; }

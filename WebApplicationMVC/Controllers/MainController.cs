@@ -23,6 +23,7 @@ namespace WebApplicationMVC.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            Console.WriteLine(deviceDb.Devices.Count());
             IEnumerable<DeviceDb> dev = deviceDb.Devices;
             string linkFile = LinkFileData();
             bool fileExist = System.IO.File.Exists(linkFile);
