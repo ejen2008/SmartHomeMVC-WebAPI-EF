@@ -4,17 +4,22 @@
 @model DeviceDataView
 
 <article id="device">
+@*DeviceActive = null*@
+
     @if (Model.DeviceActive != null && Model.DeviceList.Count > 0)
     {
         <div class="col-xs-6 col-sm-push-3 devicePadding deviceBorder row form">
 
             @using (Html.BeginForm())
             {
-                IDevicable device = Model.DeviceActive;
+                int indexDeviceActive = (int)Model.DeviceActive;
+                IDevicable device = Model.DeviceList[indexDeviceActive];
+                //IDevicable device = Model.DeviceActive;
 
                 //"./DeleteDevice"
                 <span id="nameDevice" class="col-xs-11  text-center  devicePadding deviceName">@device.Name</span>
-                @Html.ActionLinkImage("delete", Url.Content("~/Content/button-trash.png"), "/Main/DeleteDevice", "btn-md", "btn-danger imageButtonIcon", "Удалить устройство")
+                //"/Main/DeleteDevice" + "/" + Model.DeviceActive;
+                @Html.ActionLinkImage("delete", Url.Content("~/Content/button-trash.png"), "/Main/DeleteDevice/" + device.Name, "btn-md", "btn-danger imageButtonIcon", "Удалить устройство")
                 string title = device.Name + " выкл.";
                 if (device.State == true)
                 {

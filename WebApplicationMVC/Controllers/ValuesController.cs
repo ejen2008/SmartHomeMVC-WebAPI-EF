@@ -7,17 +7,29 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using WebApplicationMVC.Models;
+using WebApplicationMVC.Models.DevicesDb;
+using WebApplicationMVC.Models.Mapper;
 
 namespace WebApplicationMVC.Controllers
 {
     public class ValuesController : ApiController
     {
-        DeviceDataView deviceDataView = new DeviceDataView(new Views.ViewData.DeviceIconLink());
+        //private DeviceDataView deviceDataView = new DeviceDataView(new Views.ViewData.DeviceIconLink());
+        private DeviceContext deviceDbContext = new DeviceContext();
+        MapperDevices mapper = new MapperDevices();
+
         public string Put(string id, [FromBody]string textBox)
         {
-            deviceDataView = ReadData();
-            List<IDevicable> deviceList = deviceDataView.DeviceList;
-            IDevicable device = deviceList.Find(dev => dev == deviceDataView.DeviceActive);
+            //deviceDataView.DeviceList = GetAllDevices();// исправить для работы с id
+            //List<IDevicable> deviceList = deviceDataView.DeviceList;
+            int idDevice=0;
+            DeviceDb deviceDb = deviceDbContext.Devices.Find(idDevice);
+
+
+            //IDevicable device = deviceList.Find(dev => dev == deviceDataView.DeviceActive);
+
+            IDevicable device = mapper.GetDeviceModel(deviceDb);
+
             string result;
             
             if (device.State == true)
@@ -158,29 +170,44 @@ namespace WebApplicationMVC.Controllers
                         }
                 }
             }
-            WriteData();
+            deviceDb = mapper.GetDeviceDb(device);
+            deviceDbContext.Entry(deviceDb).State = System.Data.Entity.EntityState.Modified;
+            deviceDbContext.SaveChanges();
+
+            //WriteData();
             return result;
         }
-        private void WriteData()
+
+        private List<IDevicable> GetAllDevices()
         {
-            if (deviceDataView != null)
-            {
-                IWriteble write = new WriteBin();
-                string linkFileData = LinkFileData();
-                write.Write(deviceDataView, linkFileData);
-            }
+            List<DeviceDb> devicesDbList;
+            devicesDbList = deviceDbContext.Devices.ToList();
+            
+            List<IDevicable> devices = mapper.GetAllDeviceModel(devicesDbList);
+            return devices;
         }
-        private DeviceDataView ReadData()
-        {
-            IReadable read = new ReadBin();
-            string linkFileData = LinkFileData();
-            DeviceDataView data = read.ReadDevicesData(linkFileData);
-            return data;
-        }
-        private string LinkFileData()
-        {
-            return System.Web.Hosting.HostingEnvironment.MapPath("/devicesData.bin");
-        }
+
+
+        //private void WriteData()
+        //{
+        //    if (deviceDataView != null)
+        //    {
+        //        IWriteble write = new WriteBin();
+        //        string linkFileData = LinkFileData();
+        //        write.Write(deviceDataView, linkFileData);
+        //    }
+        //}
+        //private DeviceDataView ReadData()
+        //{
+        //    IReadable read = new ReadBin();
+        //    string linkFileData = LinkFileData();
+        //    DeviceDataView data = read.ReadDevicesData(linkFileData);
+        //    return data;
+        //}
+        //private string LinkFileData()
+        //{
+        //    return System.Web.Hosting.HostingEnvironment.MapPath("/devicesData.bin");
+        //}
 
     }
 }

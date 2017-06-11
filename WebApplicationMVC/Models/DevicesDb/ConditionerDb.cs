@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace WebApplicationMVC.Models
+namespace WebApplicationMVC.Models.DevicesDb
 {
-    [Table("Blower")]
-    public class BlowerDb: DeviceDb
+    [Table("Conditioner")]
+    public class ConditionerDb:DeviceDb
     {
+        public byte Temperature { get; set; }
         public Speed LevelSpeedAir { get; set; }
     }
 }

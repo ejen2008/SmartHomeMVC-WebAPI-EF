@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web;
 using SmartHome;
 
-namespace WebApplicationMVC.Models
+namespace WebApplicationMVC.Models.DevicesDb
 {
     public class DeviceDb
     {

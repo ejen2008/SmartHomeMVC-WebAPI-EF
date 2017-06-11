@@ -16,7 +16,7 @@ namespace WebApplicationMVC.Models
             this.objectIconLink = ObjectIconLink;
         }
         public List<IDevicable> DeviceList { get; set; }
-        public IDevicable DeviceActive { get; set; }
+        public int? DeviceActive { get; set; }
         public string Message { get; set; }
 
         //public DeviceIconLink ObjectIconLink { private get; set; }

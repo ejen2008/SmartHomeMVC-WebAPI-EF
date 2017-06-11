@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace WebApplicationMVC.Models
+namespace WebApplicationMVC.Models.DevicesDb
 {
     [Table("TV")]
     public class TVDb:DeviceDb
     {
         public byte Volume { get; set; }
 
-        public int Chanel { get; set; }
+        public int Channel { get; set; }
     }
 }
