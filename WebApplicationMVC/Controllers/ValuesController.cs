@@ -14,20 +14,21 @@ namespace WebApplicationMVC.Controllers
 {
     public class ValuesController : ApiController
     {
-        //private DeviceDataView deviceDataView = new DeviceDataView(new Views.ViewData.DeviceIconLink());
         private DeviceContext deviceDbContext = new DeviceContext();
         MapperDevices mapper = new MapperDevices();
 
-        public string Put(string id, [FromBody]string textBox)
+        public string Put(string id, [FromBody]string [] parameters)//textBox
         {
-            //deviceDataView.DeviceList = GetAllDevices();// исправить для работы с id
-            //List<IDevicable> deviceList = deviceDataView.DeviceList;
-            int idDevice=0;
-            DeviceDb deviceDb = deviceDbContext.Devices.Find(idDevice);
 
+            string nameDevice = parameters[0];
+            string textBoxValue = null;
+            if (parameters.Length == 2)
+            {
+                textBoxValue = parameters[1];
+            }
 
-            //IDevicable device = deviceList.Find(dev => dev == deviceDataView.DeviceActive);
-
+            List < DeviceDb > devicesDbList = deviceDbContext.Devices.ToList();
+            DeviceDb deviceDb = devicesDbList.Find(dev => dev.Name == nameDevice);
             IDevicable device = mapper.GetDeviceModel(deviceDb);
 
             string result;
@@ -63,7 +64,7 @@ namespace WebApplicationMVC.Controllers
                     case "volume":
                         {
                             byte data;
-                            byte.TryParse(textBox, out data);
+                            byte.TryParse(textBoxValue, out data);
                             ((IVolumenable)device).Volume = data;
                             result = ((IVolumenable)device).Volume.ToString();
                             break;
@@ -83,7 +84,7 @@ namespace WebApplicationMVC.Controllers
                     case "current":
                         {
                             int data;
-                            int.TryParse(textBox, out data);
+                            int.TryParse(textBoxValue, out data);
                             ((ISwitchable)device).Current = data;
                             result = ((ISwitchable)device).Current.ToString();
                             break;
@@ -103,7 +104,7 @@ namespace WebApplicationMVC.Controllers
                     case "temperature":
                         {
                             byte data;
-                            byte.TryParse(textBox, out data);
+                            byte.TryParse(textBoxValue, out data);
                             ((ITemperaturable)device).Temperature = data;
                             result = ((ITemperaturable)device).Temperature.ToString();
                             break;
@@ -123,7 +124,7 @@ namespace WebApplicationMVC.Controllers
                     case "bass":
                         {
                             byte data;
-                            byte.TryParse(textBox, out data);
+                            byte.TryParse(textBoxValue, out data);
                             ((IBassable)device).BassLevel = data;
                             result = ((IBassable)device).BassLevel.ToString();
                             break;
@@ -161,6 +162,7 @@ namespace WebApplicationMVC.Controllers
                         {
                             device.On();
                             result = device.State.ToString();
+                            deviceDb.State = device.State; // я нашел такой выход
                             break;
                         }
                     default:
@@ -170,11 +172,13 @@ namespace WebApplicationMVC.Controllers
                         }
                 }
             }
-            deviceDb = mapper.GetDeviceDb(device);
+            //int idDevice = deviceDb.Id;
+            //deviceDb = mapper.GetDeviceDb(device);
+            //deviceDb.Id = idDevice;
+            
             deviceDbContext.Entry(deviceDb).State = System.Data.Entity.EntityState.Modified;
             deviceDbContext.SaveChanges();
 
-            //WriteData();
             return result;
         }
 
@@ -186,28 +190,5 @@ namespace WebApplicationMVC.Controllers
             List<IDevicable> devices = mapper.GetAllDeviceModel(devicesDbList);
             return devices;
         }
-
-
-        //private void WriteData()
-        //{
-        //    if (deviceDataView != null)
-        //    {
-        //        IWriteble write = new WriteBin();
-        //        string linkFileData = LinkFileData();
-        //        write.Write(deviceDataView, linkFileData);
-        //    }
-        //}
-        //private DeviceDataView ReadData()
-        //{
-        //    IReadable read = new ReadBin();
-        //    string linkFileData = LinkFileData();
-        //    DeviceDataView data = read.ReadDevicesData(linkFileData);
-        //    return data;
-        //}
-        //private string LinkFileData()
-        //{
-        //    return System.Web.Hosting.HostingEnvironment.MapPath("/devicesData.bin");
-        //}
-
     }
 }

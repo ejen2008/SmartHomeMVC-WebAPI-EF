@@ -16,7 +16,6 @@ namespace WebApplicationMVC.Controllers
     {
         private DeviceContext deviceDbContext = new DeviceContext();
         private DeviceDataView deviceDataView = new DeviceDataView(new Views.ViewData.DeviceIconLink());
-        //private DeviceDataView deviceDataView;
         private List<IDevicable> devicesList;
 
 
@@ -30,19 +29,9 @@ namespace WebApplicationMVC.Controllers
             }
             else
             {
-                //deviceDataView.DeviceActive = 0;
-                //DeviceDb activeDevice = deviceDbContext.Devices.ElementAt(activeDeviceNum).;
-                //DeviceDb activeDevices = deviceDbContext.Devices.OfType<TVDb>().ElementAt(activeDeviceNum);
-
-                //DeviceDb activeDeviceDb = deviceDbContext.Devices.Find(0);//выбрать полность с таблицы
-                //devicesDb.Select(dev => dev.Id = 0) = activeDeviceDb;
-                //devicesDb.ElementAt(0)
-                //deviceDbContext.Devices.ElementAt<DeviceDb>(0);
-                //deviceDbContext.Devices.Include(dev => dev);
-
                 deviceDataView.DeviceList = GetAllDevices();
                 EventStateDevice();
-                //deviceDataView.DeviceActive = deviceDataView.DeviceList[0];
+
                 deviceDataView.DeviceActive = 0;
             }
 
@@ -114,7 +103,6 @@ namespace WebApplicationMVC.Controllers
                         }
                 }
                 deviceDataView.Message = null;
-                //deviceDataView.DeviceActive = devicesList.Last<IDevicable>();
                 deviceDataView.DeviceActive = devicesList.Count - 1;
                 EventStateDevice();
 
@@ -140,7 +128,6 @@ namespace WebApplicationMVC.Controllers
             devicesList = deviceDataView.DeviceList;
             IDevicable activDevice = devicesList.Find(device => device.Name == parameter);
             int indexActivDevice = devicesList.IndexOf(activDevice);
-            //IDevicable activDevice = devicesList.Find(device => device.Name.ToLower() == parameter.ToLower());
 
             deviceDataView.DeviceActive = indexActivDevice;
             deviceDataView.Message = null;
@@ -150,24 +137,8 @@ namespace WebApplicationMVC.Controllers
 
         public ActionResult DeleteDevice(string parameter)// поменять на работу с id устройством............ (int? parameter)
         {
-            //DeviceDb device;
-            //if (parameter != null && )
-            //{
-            //device = deviceDbContext.Devices.Find(parametr);
-            //}
-            //if (device != null)
-            //{
-            //    deviceDbContext.Devices.Remove(parameter);
-            //}
-
-            
-
-            //IDevicable activDevice = devicesList.Find(device => device.Name == parameter);
-            //string Name = parameter;
             List <DeviceDb> devicesDbList = deviceDbContext.Devices.ToList();
             DeviceDb activDeviceDb = devicesDbList.Find(dev => dev.Name == parameter);
-            //DeviceDb deviceDb = deviceDbContext.Devices.Find(Name);
-            
 
             if (activDeviceDb != null)
             {
@@ -176,9 +147,6 @@ namespace WebApplicationMVC.Controllers
                 deviceDbContext.SaveChanges();
 
                 MapperDevices mapper = new MapperDevices();
-                //DeviceDb deviceDb = mapper.GetDeviceDb(activDevice);
-
-
                 deviceDataView.DeviceList = mapper.GetAllDeviceModel(devicesDbList);
             }
             //
@@ -202,201 +170,5 @@ namespace WebApplicationMVC.Controllers
             List<IDevicable> devices = mapper.GetAllDeviceModel(devicesDbList);
             return devices;
         }
-        //public ActionResult OnOffDevice()
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device.State == true)
-        //    {
-        //        device.Off();
-        //    }
-        //    else//false
-        //    {
-        //        device.On();
-        //        deviceDataView.Message = null;
-
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-
-        //public ActionResult Volume(string parameter)
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device != null && device.State == true)
-        //    {
-        //        switch (parameter)
-        //        {
-        //            case "Down":
-        //                {
-        //                    ((IVolumenable)device).VolumeDown();
-        //                    break;
-        //                }
-        //            case "Up":
-        //                {
-        //                    ((IVolumenable)device).VolumeUp();
-        //                    break;
-        //                }
-        //            case "Mute":
-        //                {
-        //                    ((IVolumenable)device).Volume = 0;
-        //                    break;
-        //                }
-        //        }
-        //        deviceDataView.Message = null;
-        //    }
-        //    else
-        //    {
-        //        deviceDataView.Message = device.Name + " выкл.";
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-        //public ActionResult Chanel(string parameter)
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device != null && device.State == true)
-        //    {
-        //        switch (parameter)
-        //        {
-        //            case "Previos":
-        //                {
-        //                    ((ISwitchable)device).Previous();
-        //                    break;
-        //                }
-        //            case "Next":
-        //                {
-        //                    ((ISwitchable)device).Next();
-        //                    break;
-        //                }
-        //        }
-        //        deviceDataView.Message = null;
-        //    }
-        //    else
-        //    {
-        //        deviceDataView.Message = device.Name + " выкл.";
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        //public ActionResult Temperature(string parameter)
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device != null && device.State == true)
-        //    {
-        //        switch (parameter)
-        //        {
-        //            case "Down":
-        //                {
-        //                    ((ITemperaturable)device).TemperatureDown();
-        //                    break;
-        //                }
-        //            case "Up":
-        //                {
-        //                    ((ITemperaturable)device).TemperatureUp();
-        //                    break;
-        //                }
-        //        }
-        //        deviceDataView.Message = null;
-        //    }
-        //    else
-        //    {
-        //        deviceDataView.Message = device.Name + " выкл.";
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-        //public ActionResult Bass(string parameter)
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device != null && device.State == true)
-        //    {
-        //        switch (parameter)
-        //        {
-        //            case "Down":
-        //                {
-        //                    ((IBassable)device).BassDown();
-        //                    break;
-        //                }
-        //            case "Up":
-        //                {
-        //                    ((IBassable)device).BassUp();
-        //                    break;
-        //                }
-        //        }
-        //        deviceDataView.Message = null;
-        //    }
-        //    else
-        //    {
-        //        deviceDataView.Message = device.Name + " выкл.";
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        //public ActionResult SpeedAir(string parameter)
-        //{
-        //    deviceDataView = ReadData();
-        //    //deviceDataView = DeviceData();
-        //    IDevicable device = deviceDataView.DeviceActive;
-        //    if (device != null && device.State == true)
-        //    {
-        //        switch (parameter)
-        //        {
-        //            case "Low":
-        //                {
-        //                    ((ISpeedAirable)device).SpeedAirLow();
-        //                    break;
-        //                }
-        //            case "Medium":
-        //                {
-        //                    ((ISpeedAirable)device).SpeedAirMedium();
-        //                    break;
-        //                }
-        //            default://Hight
-        //                {
-        //                    ((ISpeedAirable)device).SpeedAirHight();
-        //                    break;
-        //                }
-        //        }
-        //        deviceDataView.Message = null;
-        //    }
-        //    else
-        //    {
-        //        deviceDataView.Message = device.Name + " выкл.";
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-        ////private DeviceDataView DeviceData()
-        ////{
-        ////    return (DeviceDataView)Session["Device"];
-        ////}
-
-        //private void WriteData()
-        //{
-        //    if (deviceDataView != null)
-        //    {
-        //        IWriteble write = new WriteBin();
-        //        string linkFileData = LinkFileData();
-        //        write.Write(deviceDataView, linkFileData);
-        //    }
-        //}
-        //private DeviceDataView ReadData()
-        //{
-        //    IReadable read = new ReadBin();
-        //    string linkFileData = LinkFileData();
-        //    DeviceDataView data = read.ReadDevicesData(linkFileData);
-        //    return data;
-        //}
-        //private string LinkFileData()
-        //{
-        //    return Server.MapPath("/devicesData.bin");
-        //}
-    }
+     }
 }

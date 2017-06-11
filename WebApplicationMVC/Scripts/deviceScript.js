@@ -1,12 +1,18 @@
 ﻿$(function () {
     var actionLink = $("#device").find("a").not("#delete");
     var button = $("#device").find("button");
-
+    //sad
+    var nameDevice = $("#nameDevice").text();
+    //alert(nameDevice);
+    //sad
     actionLink.on("click", function (event) {
         event.preventDefault();
         var buttonId = this.id;
+        
+        var parameters = [nameDevice];
         $.ajax({
             url: "/api/values/" + buttonId,
+            data: {"": parameters},
             type: "PUT",
             success: function (data) {
                 ButtonClikc(buttonId, data);
@@ -18,10 +24,11 @@
         event.preventDefault();
         var buttonId = this.value;
         var textBox = TextBoxData(buttonId);
+        var parameters = [nameDevice, textBox];
 
         $.ajax({
             url: "/api/values/" + buttonId,
-            data: { "": textBox },
+            data: { "": parameters },
             type: "PUT",
             success: function (data) {
                 ButtonClikc(buttonId, data);
