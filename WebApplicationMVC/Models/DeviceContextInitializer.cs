@@ -8,7 +8,7 @@ using WebApplicationMVC.Models.DevicesDb;
 
 namespace WebApplicationMVC.Models
 {/*DropCreateDatabaseAlways CreateDatabaseIfNotExists*/
-    public class DeviceContextInitializer : DropCreateDatabaseAlways<DeviceContext>
+    public class DeviceContextInitializer : CreateDatabaseIfNotExists<DeviceContext>
     {
         protected override void Seed(DeviceContext context)
         {
