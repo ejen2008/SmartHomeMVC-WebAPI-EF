@@ -17,6 +17,8 @@ namespace WebApplicationMVC.Controllers
         private DeviceContext deviceDbContext = new DeviceContext();
         MapperDevices mapper = new MapperDevices();
 
+
+
         public string Put(string id, [FromBody]string [] parameters)//textBox
         {
 
@@ -41,12 +43,14 @@ namespace WebApplicationMVC.Controllers
                         {
                             device.Off();
                             result = device.State.ToString();
+                            //deviceDb.State = device.State;
                             break;
                         }
                     case "volumeDown":
                         {
                             ((IVolumenable)device).VolumeDown();
                             result = ((IVolumenable)device).Volume.ToString();
+                            //deviceDb = ChangeStateDevice(deviceDb, device);
                             break;
                         }
                     case "volumeUp":
@@ -162,7 +166,7 @@ namespace WebApplicationMVC.Controllers
                         {
                             device.On();
                             result = device.State.ToString();
-                            deviceDb.State = device.State; // я нашел такой выход
+
                             break;
                         }
                     default:
@@ -172,14 +176,45 @@ namespace WebApplicationMVC.Controllers
                         }
                 }
             }
+
+            deviceDb.State = device.State;
+            deviceDb = ChangeStateDevice(deviceDb, device);
             //int idDevice = deviceDb.Id;
             //deviceDb = mapper.GetDeviceDb(device);
             //deviceDb.Id = idDevice;
-            
+
             deviceDbContext.Entry(deviceDb).State = System.Data.Entity.EntityState.Modified;
             deviceDbContext.SaveChanges();
 
             return result;
+        }
+
+        private DeviceDb ChangeStateDevice(DeviceDb deviceDb, IDevicable device)
+        {
+            if (deviceDb is TVDb)
+            {
+                ((TVDb)deviceDb).Volume = ((IVolumenable)device).Volume;
+                ((TVDb)deviceDb).Channel = ((ISwitchable)device).Current;
+            }
+            if (deviceDb is SoundDeviceDb)
+            {
+                ((SoundDeviceDb)deviceDb).Volume = ((IVolumenable)device).Volume;
+                ((SoundDeviceDb)deviceDb).Channel = ((ISwitchable)device).Current;
+            }
+            if (deviceDb is HeaterDb)
+            {
+                ((HeaterDb)deviceDb).Temperature = ((ITemperaturable)device).Temperature;
+            }
+            if (deviceDb is ConditionerDb)
+            {
+                ((ConditionerDb)deviceDb).Temperature = ((ITemperaturable)device).Temperature;
+                ((ConditionerDb)deviceDb).LevelSpeedAir = ((ISpeedAirable)device).LevelSpeed;
+            }
+            if (deviceDb is BlowerDb)
+            {
+                ((BlowerDb)deviceDb).LevelSpeedAir = ((ISpeedAirable)device).LevelSpeed;
+            }
+            return deviceDb;
         }
 
         private List<IDevicable> GetAllDevices()
